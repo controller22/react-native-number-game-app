@@ -1,31 +1,55 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import Title from '../components/ui/Title'
-import Colors from "../constants/Colors";
+import { Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import Title from '../components/ui/Title';
+import Colors from "../constants/Colors";
 
-function GameOverScreen({roundsNumber,userNumber,onStartNewGame}) {
+function GameOverScreen({ roundsNumber, userNumber, onStartNewGame }) {
+    const { width, height } = useWindowDimensions();
+
+    let imageSize = 300;
+
+    if (width < 380) {
+        imageSize = 150;
+    }
+    if (height < 400) {
+        imageSize = 80;
+    }
+
+    const imageStyle = {
+        width: imageSize,
+        height: imageSize,
+        borderRadius: imageSize / 2
+    }
+
     return (
-        <View style={styles.rootContainer}>
-            <Title >Game Over!</Title>
-            <View style={styles.imageContainer}>
-                <Image
-                    style={styles.image}
-                    source={require('../assets/images/success.png')}
-                />
+        <ScrollView style={styles.screen}>
+            <View style={styles.rootContainer}>
+                <Title >Game Over!</Title>
+                <View style={[styles.imageContainer, imageStyle]}>
+                    <Image
+                        style={styles.image}
+                        source={require('../assets/images/success.png')}
+                    />
+                </View>
+                <View>
+                    <Text style={styles.summaryText}>
+                        <Text style={styles.hightlight}>{roundsNumber}</Text> 번만에 <Text style={styles.hightlight}>{userNumber}</Text>를 알아 냈어요.
+                    </Text>
+                    <PrimaryButton onPress={onStartNewGame}>새로운 게임 시작하기</PrimaryButton>
+                </View>
             </View>
-            <View>
-                <Text style={styles.summaryText}>
-                    <Text style={styles.hightlight}>{roundsNumber}</Text> 번만에 <Text style={styles.hightlight}>{userNumber}</Text>를 알아 냈어요.
-                </Text>
-                <PrimaryButton onPress={onStartNewGame}>새로운 게임 시작하기</PrimaryButton>
-            </View>
-        </View>
+        </ScrollView>
     )
 }
 
 export default GameOverScreen;
 
+// const deviceWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
+    screen:{
+        flex:1
+    },
     rootContainer: {
         flex: 1,
         padding: 24,
@@ -33,9 +57,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     imageContainer: {
-        width: 300,
-        height: 300,
-        borderRadius: 150,
+        // width: deviceWidth < 380 ? 150 : 300,
+        // height: deviceWidth < 380 ? 150 : 300,
+        // borderRadius: deviceWidth < 380 ? 75 : 150,
         borderWidth: 3,
         borderColor: Colors.primary800,
         overflow: "hidden",
